@@ -113,7 +113,7 @@ public class Main {
     /**
      * 1. Display the schedule of all trips for a given StartLocationName and Destination Name,
      * and Date
-     * addition to these attributes, the schedule includes: Scheduled StartTime,ScheduledArrivalTime , DriverID, and BusID
+     * addition to these attributes, the schedule includes: Scheduled StartTime, ScheduledArrivalTime , DriverID , and BusID
      * */
     public static void displaySchedule(Statement mystatement) throws SQLException{
 
@@ -204,7 +204,9 @@ public class Main {
 
 //        display results
         while(myres.next()){
-            System.out.println(myres.getString("DriverName") + myres.getString("DriverTelephoneNumber") + myres.getString("TripNumber") );
+            System.out.println(myres.getString("DriverName")
+                                + myres.getString("DriverTelephoneNumber")
+                                + myres.getString("TripNumber"));
         }
     }
 
@@ -212,33 +214,64 @@ public class Main {
      * 8. Add a driver
      * */
     private static void addDriver(Statement mystatement) throws SQLException{
-        ResultSet myres = mystatement.executeQuery("Select * FROM Driver");
+        Scanner input = new Scanner(System.in);
 
-        while(myres.next()){
-            System.out.println(myres.getString("DriverName") + myres.getString("DriverTelephoneNumber"));
-        }
+        System.out.println("What is the driver name: ");
+        String driver_name = "'" + input.nextLine() + "'";
+
+        System.out.println("Enter the driver's phone number: ");
+        int driver_phone_number = input.nextInt();
+        input.nextLine();
+
+        String query =
+                String.format("INSERT INTO cs4350_lab4.Driver(DriverName, DriverTelephoneNumber) " +
+                                "VALUES (%s, %d);", driver_name, driver_phone_number);
+
+        mystatement.executeUpdate(query);
     }
 
     /**
      * 9. Add a bus
      * */
     private static void addBus(Statement mystatement) throws SQLException{
-        ResultSet myres = mystatement.executeQuery("Select * FROM Driver");
+        Scanner input = new Scanner(System.in);
+        int BusID = 0;
+        String Model = "";
+        int Year = 2021;
 
-        while(myres.next()){
-            System.out.println(myres.getString("DriverName") + myres.getString("DriverTelephoneNumber"));
-        }
+        System.out.println("Enter an ID for bus: ");
+        BusID = input.nextInt();
+        input.nextLine();
+
+        System.out.println("Enter model of the bus: ");
+        Model = "'" + input.nextLine() + "'";
+
+        System.out.println("Enter manufacture year: ");
+        Year = input.nextInt();
+
+        String query =
+                String.format("INSERT INTO cs4350_lab4.Bus(BusID, Model, Year) " +
+                                "VALUES (%d, %s, %d);", BusID, Model, Year);
+
+        mystatement.executeUpdate(query);
     }
 
     /**
      * 10. Delete a bus
      * */
     private static void deleteBus(Statement mystatement) throws SQLException{
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("input the bus ID to remove: ");
+        int BusID = input.nextInt();
+        input.nextLine();
+
         ResultSet myres = mystatement.executeQuery("Select * FROM Driver");
 
-        while(myres.next()){
-            System.out.println(myres.getString("DriverName") + myres.getString("DriverTelephoneNumber"));
-        }
+        String query =
+                String.format("DELETE FROM cs4350_lab4.Bus WHERE BusID = %d", BusID);
+
+        mystatement.executeUpdate(query);
     }
 
     /**
@@ -246,10 +279,28 @@ public class Main {
      * data include the attributes of the table ActualTripStopInfo
      * */
     private static void insert_Actual_TripInfo(Statement mystatement) throws SQLException{
-        ResultSet myres = mystatement.executeQuery("Select * FROM Driver");
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Enter the trip number: ");
+        int trip_number = input.nextInt();
+
+//        format the query
+        String query =
+                String.format("SELECT * FROM cs4350_lab4.ActualTripStopInfo WHERE TripNumber = %d;", trip_number);
+
+//        execute the query
+        ResultSet myres = mystatement.executeQuery(query);
 
         while(myres.next()){
-            System.out.println(myres.getString("DriverName") + myres.getString("DriverTelephoneNumber"));
+            System.out.println(myres.getString("TripNumber") + " "
+                    + myres.getString("Date") + " "
+                    + myres.getString("ScheduledStartTime") + " "
+                    + myres.getString("StopNumber") + " "
+                    + myres.getString("ScheduledArrivalTime") + " "
+                    + myres.getString("ActualArrivalTime") + " "
+                    + myres.getString("NumberOfPassengerIn") + " "
+                    + myres.getString("NumberOfPassengerOut") + " "
+            );
         }
     }
 
