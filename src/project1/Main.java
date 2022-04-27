@@ -11,7 +11,7 @@ public class Main {
 
         String conURL = "jdbc:mysql://localhost:3306/cs4350_lab4";
         String user = "root";
-        String password = "Pemd@sislife!12";
+        String password = "";
         try {
             // get connection
             Connection myConn = DriverManager.getConnection(conURL, user, password);
@@ -185,10 +185,26 @@ public class Main {
      * 7. Display the weekly schedule of a given driver and date
      * */
     private static void dispWeeklySchedule(Statement mystatement) throws SQLException{
-        ResultSet myres = mystatement.executeQuery("Select * FROM Driver");
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter the driver name: ");
+        String driverName = input.nextLine();
 
+//        surround driver name with %% to make sure it matches
+        driverName = "'%"+ driverName + "%'";
+//        format the query
+        String query = String.format(   "SELECT * " +
+                                        "FROM cs4350_lab4.Driver d " +
+                                        "JOIN cs4350_lab4.TripOffering tof " +
+                                        "ON d.DriverName = tof.DriverName " +
+                                        "WHERE d.DriverName like %s", driverName
+                                    );
+
+//        execute the query
+        ResultSet myres = mystatement.executeQuery(query);
+
+//        display results
         while(myres.next()){
-            System.out.println(myres.getString("DriverName") + myres.getString("DriverTelephoneNumber"));
+            System.out.println(myres.getString("DriverName") + myres.getString("DriverTelephoneNumber") + myres.getString("TripNumber") );
         }
     }
 
