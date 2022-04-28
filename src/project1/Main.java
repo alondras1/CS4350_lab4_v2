@@ -228,6 +228,19 @@ public class Main {
                                 "VALUES (%s, %d);", driver_name, driver_phone_number);
 
         mystatement.executeUpdate(query);
+
+        //        Show all the contents
+        System.out.println();
+        ResultSet myres = mystatement.executeQuery("Select * FROM Driver");
+        System.out.println("The Driver table looks like: ");
+        while (myres.next()) {
+            System.out.println(
+                    myres.getString("DriverName") +  " " +
+                            myres.getString("DriverTelephoneNumber") + " "
+            );
+        }
+        System.out.println();
+
     }
 
     /**
@@ -254,6 +267,19 @@ public class Main {
                                 "VALUES (%d, %s, %d);", BusID, Model, Year);
 
         mystatement.executeUpdate(query);
+
+        //        Show all the contents
+        System.out.println();
+        ResultSet myres = mystatement.executeQuery("Select * FROM Bus");
+        System.out.println("The Bus table looks like: ");
+        while (myres.next()) {
+            System.out.println(
+                    myres.getString("BusID") +  " " +
+                            myres.getString("Model") + " " +
+                            myres.getString("Year") + " "
+            );
+        }
+        System.out.println();
     }
 
     /**
@@ -262,16 +288,38 @@ public class Main {
     private static void deleteBus(Statement mystatement) throws SQLException{
         Scanner input = new Scanner(System.in);
 
+//        Show all the contents
+        ResultSet myres = mystatement.executeQuery("Select * FROM Bus");
+        while (myres.next()) {
+            System.out.println(
+                    myres.getString("BusID") +  " " +
+                    myres.getString("Model") + " " +
+                    myres.getString("Year") + " "
+            );
+        }
+        System.out.println();
+
         System.out.println("input the bus ID to remove: ");
         int BusID = input.nextInt();
         input.nextLine();
-
-        ResultSet myres = mystatement.executeQuery("Select * FROM Driver");
 
         String query =
                 String.format("DELETE FROM cs4350_lab4.Bus WHERE BusID = %d", BusID);
 
         mystatement.executeUpdate(query);
+
+        //        Show all the contents
+        myres = mystatement.executeQuery("Select * FROM Bus");
+        System.out.println();
+        System.out.println("The resulting table looks like this: ");
+        while (myres.next()) {
+            System.out.println(
+                    myres.getString("BusID") +  " " +
+                            myres.getString("Model") + " " +
+                            myres.getString("Year") + " "
+            );
+        }
+        System.out.println();
     }
 
     /**
@@ -291,17 +339,30 @@ public class Main {
 //        execute the query
         ResultSet myres = mystatement.executeQuery(query);
 
+        System.out.println(
+                "TripNumber" +
+                "\tDate" +
+                "\tScheduledStartTime" +
+                "\tStopNumber" +
+                "\tScheduledArrivalTime" +
+                "\tActualArrivalTime" +
+                "\tNumberOfPassengerIn" +
+                "\tNumberOfPassengerOut"
+        );
+
         while(myres.next()){
-            System.out.println(myres.getString("TripNumber") + " "
-                    + myres.getString("Date") + " "
-                    + myres.getString("ScheduledStartTime") + " "
-                    + myres.getString("StopNumber") + " "
-                    + myres.getString("ScheduledArrivalTime") + " "
-                    + myres.getString("ActualArrivalTime") + " "
-                    + myres.getString("NumberOfPassengerIn") + " "
-                    + myres.getString("NumberOfPassengerOut") + " "
+            System.out.println(myres.getString("TripNumber") + "\t"
+                    + myres.getString("Date") + "\t"
+                    + myres.getString("ScheduledStartTime") + "\t"
+                    + myres.getString("StopNumber") + "\t"
+                    + myres.getString("ScheduledArrivalTime") + "\t"
+                    + myres.getString("ActualArrivalTime") + "\t"
+                    + myres.getString("NumberOfPassengerIn") + "\t"
+                    + myres.getString("NumberOfPassengerOut") + "\t"
             );
         }
+
+        System.out.println();
     }
 
 }
